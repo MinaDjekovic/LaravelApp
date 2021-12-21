@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Resources\StudentCollection;
 use App\Http\Resources\StudentResource;
 use App\Models\Student;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class StudentController extends Controller
 {
@@ -38,7 +41,25 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'index' => 'required|string|max:255',
+            'faculty_id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+
+        $student = Student::create([
+            'name' => $request->name,
+            'index' => $request->index,
+            'faculty_id' => $request->faculty_id,
+            'user_id' => Auth::user()->id
+        ]);
+
+
+        return response()->json(['Student created succesfully.', new StudentResource($student)]);
     }
 
     /**
@@ -72,7 +93,23 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'index' => 'required|string|max:255',
+            'faculty_id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+
+        $student->name = $request->name;
+        $student->index = $request->index;
+        $student->faculty_id = $request->faculty_id;
+
+        $student->save();
+
+        return response()->json(['Student updated succesfully.', new StudentResource($student)]);
     }
 
     /**
@@ -83,6 +120,7 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-        //
+        $student->delete();
+        return response()->json('Student deleted successfully!');
     }
 }

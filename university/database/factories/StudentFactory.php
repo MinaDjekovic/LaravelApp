@@ -20,6 +20,7 @@ class StudentFactory extends Factory
             'name' => $this->faker->name(),
             'index' => $this->faker->unique()->numberBetween($min = 1, $max = 1000),
             'faculty_id' => $this->faker->numberBetween($min = 1, $max = 20),
+            'user_id' => $this->faker->numberBetween($min = 1, $max = 5),
         ];
     }
 }

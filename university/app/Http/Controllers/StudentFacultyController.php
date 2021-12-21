@@ -34,7 +34,7 @@ class StudentFacultyController extends Controller
             $student->name = $request->name;
         }
         if (isset($request->index)) {
-            $student->index = $request->address;
+            $student->index = $request->index;
         }
         $student->save();
     }

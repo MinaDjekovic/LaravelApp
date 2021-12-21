@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentFacultyController;
@@ -33,3 +34,17 @@ Route::get('/faculties/{id}/students', [StudentFacultyController::class, 'index'
 Route::delete('/students/{id}/delete', [StudentFacultyController::class, 'delete']);
 
 Route::post('/students/{id}/update', [StudentFacultyController::class, 'update']);
+
+Route::post('/register', [AuthController::class, 'register']);
+
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('/profile', function (Request $request) {
+        return auth()->user();
+    });
+    Route::resource('studentss', StudentController::class)->only(['update', 'store', 'destroy']);
+
+    // API route for logout user
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
